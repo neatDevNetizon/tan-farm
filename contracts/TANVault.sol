@@ -1,12 +1,18 @@
 // SPDX-License-Identifier: GEO
 
-pragma solidity ^0.8.0;
+pragma solidity 0.6.12;
 
-import "./lib/access/Ownable.sol";
-import "./lib/security/Pausable.sol";
-import "./lib/token/ERC20/utils/SafeERC20.sol";
-import "./lib/token/ERC20/IERC20.sol";
-import "./lib/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+
+// import "./lib/access/Ownable.sol";
+// import "./lib/security/Pausable.sol";
+// import "./lib/token/ERC20/utils/SafeERC20.sol";
+// import "./lib/token/ERC20/IERC20.sol";
+// import "./lib/utils/math/SafeMath.sol";
 
 interface ICraftsman {
     function deposit(uint256 _pid, uint256 _amount) external;
@@ -83,7 +89,7 @@ contract TANVault is Ownable, Pausable {
         ICraftsman _craftsman,
         address _admin,
         address _treasury
-    ) {
+    ) public {
         token = _token;
         receiptToken = _receiptToken;
         craftsman = _craftsman;
@@ -91,7 +97,7 @@ contract TANVault is Ownable, Pausable {
         treasury = _treasury;
 
         // Infinite approve
-        IERC20(_token).safeApprove(address(_craftsman), uint256(2**256-1));
+        IERC20(_token).safeApprove(address(_craftsman), uint256(-1));
     }
 
     /**

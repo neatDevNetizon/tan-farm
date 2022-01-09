@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: GEO
 
-pragma solidity ^0.8.0;
+pragma solidity 0.6.12;
 
-import "./lib/token/ERC20/ERC20.sol";
-import "./lib/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./TANToken.sol";
+
+// import "./lib/token/ERC20/ERC20.sol";
+// import "./lib/access/Ownable.sol";
+
 
 // Workbench with Governance.
 contract Workbench is ERC20('Workbench Token', 'BENCH'), Ownable {
@@ -21,7 +25,7 @@ contract Workbench is ERC20('Workbench Token', 'BENCH'), Ownable {
     // The TAN TOKEN!
     TANToken public TAN;
 
-    constructor (TANToken _TAN) {
+    constructor (TANToken _TAN) public {
         TAN = _TAN;
     }
 

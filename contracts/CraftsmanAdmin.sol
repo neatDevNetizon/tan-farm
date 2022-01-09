@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: GEO
 
-pragma solidity ^0.8.0;
+pragma solidity 0.6.12;
 
-import './lib/token/ERC20/IERC20.sol';
-import './lib/access/Ownable.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 import "./Craftsman.sol";
+
+// import './lib/token/ERC20/IERC20.sol';
+// import './lib/access/Ownable.sol';
+// import "./Craftsman.sol";
 
 interface ICraftsman {
     function add(uint256 _allocPoint, IERC20 _lpToken, bool _withUpdate) external;
@@ -27,7 +31,7 @@ contract CraftsmanAdmin is Ownable {
 
     constructor (
         ICraftsman _craftsman
-    ) {
+    ) public {
         craftsman = _craftsman;
     }
 

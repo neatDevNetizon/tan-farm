@@ -1,14 +1,21 @@
+
 // SPDX-License-Identifier: GEO
 
-pragma solidity ^0.8.0;
+pragma solidity 0.6.12;
 
-import "./lib/security/ReentrancyGuard.sol";
-import './lib/utils/math/SafeMath.sol';
-import './lib/token/ERC20/IERC20.sol';
-import './lib/token/ERC20/utils/SafeERC20.sol';
-import './lib/access/Ownable.sol';
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import '@openzeppelin/contracts/math/SafeMath.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 
 import "./IIGO.sol";
+
+// import "./lib/security/ReentrancyGuard.sol";
+// import './lib/utils/math/SafeMath.sol';
+// import './lib/token/ERC20/IERC20.sol';
+// import './lib/token/ERC20/utils/SafeERC20.sol';
+// import './lib/access/Ownable.sol';
 
 contract IGO is IIGO, ReentrancyGuard, Ownable {
     using SafeMath for uint256;
@@ -103,7 +110,7 @@ contract IGO is IIGO, ReentrancyGuard, Ownable {
         uint256 _startBlock,
         uint256 _endBlock,
         address _adminAddress
-    ) {
+    ) public {
         require(_lpToken.totalSupply() >= 0);
         require(_offeringToken.totalSupply() >= 0);
         require(_lpToken != _offeringToken, "Tokens must be be different");

@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: GEO
-pragma solidity ^0.8.0;
 
-import "./lib/access/Ownable.sol";
-import "./lib/token/ERC20/ERC20.sol";
+pragma solidity 0.6.12;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+import "@openzeppelin/contracts/math/SafeMath.sol";
+
+// import "./lib/access/Ownable.sol";
+// import "./lib/token/ERC20/ERC20.sol";
 
 contract TANInitMintable is ERC20("TANToken", "TAN"), Ownable {
   
@@ -20,7 +25,7 @@ contract TANInitMintable is ERC20("TANToken", "TAN"), Ownable {
 
     event SupplyDistributed(uint256 amount);
 
-    constructor(uint256 _maxSupply) {
+    constructor(uint256 _maxSupply) public {
         MaxSupply = _maxSupply;
         CirculatingSupply = 0;
         SupplyPerEpoch = _calculateSupplyPerEpoch(MaxSupply, CirculatingSupply);        
@@ -36,7 +41,7 @@ contract TANInitMintable is ERC20("TANToken", "TAN"), Ownable {
         require(_teamAddresses.length == _teamAmounts.length, "TANInitMintable: Array length mismatch");
 
         if (IsAfterFirstEpoch) {
-            CirculatingSupply = CirculatingSupply + SupplyPerEpoch;
+            CirculatingSupply = CirculatingSupply.add(SupplyPerEpoch);
             SupplyPerEpoch = _calculateSupplyPerEpoch(MaxSupply, CirculatingSupply); 
         } else {
             IsAfterFirstEpoch = true;
@@ -45,24 +50,24 @@ contract TANInitMintable is ERC20("TANToken", "TAN"), Ownable {
         uint256 communitySupplyPerEpoch = SupplyPerEpoch;
         for (uint256 i; i < _teamAddresses.length; i++) {
             _mint(_teamAddresses[i], _teamAmounts[i]);
-            communitySupplyPerEpoch = communitySupplyPerEpoch - _teamAmounts[i];
+            communitySupplyPerEpoch = communitySupplyPerEpoch.sub(_teamAmounts[i]);
         }
 
-        require(communitySupplyPerEpoch >= (SupplyPerEpoch * 30 / 100));
+        require(communitySupplyPerEpoch >= SupplyPerEpoch.mul(30).div(100));
 
         SupplyPerBlock = _perEpochToPerBlock(communitySupplyPerEpoch);
-        NextDistributionTimestamp = NextDistributionTimestamp + DIST_EPOCH;
-        emit SupplyDistributed(SupplyPerEpoch - communitySupplyPerEpoch);
+        NextDistributionTimestamp = NextDistributionTimestamp.add(DIST_EPOCH);
+        emit SupplyDistributed(SupplyPerEpoch.sub(communitySupplyPerEpoch));
     }
 
     function _calculateSupplyPerEpoch (
         uint256 _maxSupplyValue,
         uint256 _circulatingValue
     ) internal pure returns(uint256) {
-        return (_maxSupplyValue - _circulatingValue) * SUPPLY_RATE / 100;
+        return _maxSupplyValue.sub(_circulatingValue).mul(SUPPLY_RATE).div(100);
     }
 
     function _perEpochToPerBlock (uint256 perMonthValue) internal pure returns (uint256) {
-        return perMonthValue * BLOCK_TIME / DIST_EPOCH;
+        return perMonthValue.mul(BLOCK_TIME).div(DIST_EPOCH);
     }
 }

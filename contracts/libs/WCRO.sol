@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GEO
 
-pragma solidity ^0.8.0;
+pragma solidity 0.6.12;
 
 contract WCRO {
     string public name     = "Wrapped CRO";
@@ -25,8 +25,7 @@ contract WCRO {
     function withdraw(uint wad) public {
         require(balanceOf[msg.sender] >= wad);
         balanceOf[msg.sender] -= wad;
-
-        payable(msg.sender).transfer(wad);
+        msg.sender.transfer(wad);
         emit Withdrawal(msg.sender, wad);
     }
 
@@ -50,7 +49,7 @@ contract WCRO {
     {
         require(balanceOf[src] >= wad);
 
-        if (src != msg.sender && allowance[src][msg.sender] != uint(2**256-1)) {
+        if (src != msg.sender && allowance[src][msg.sender] != uint(-1)) {
             require(allowance[src][msg.sender] >= wad);
             allowance[src][msg.sender] -= wad;
         }

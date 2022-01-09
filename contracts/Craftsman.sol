@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: GEO
 
-pragma solidity ^0.8.0;
+pragma solidity 0.6.12;
 
-import './lib/utils/math/SafeMath.sol';
-import './lib/token/ERC20/IERC20.sol';
-import './lib/token/ERC20/utils/SafeERC20.sol';
-import './lib/access/Ownable.sol';
+import '@openzeppelin/contracts/math/SafeMath.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+
+// import './lib/utils/math/SafeMath.sol';
+// import './lib/token/ERC20/IERC20.sol';
+// import './lib/token/ERC20/utils/SafeERC20.sol';
+// import './lib/access/Ownable.sol';
 
 import "./TANToken.sol";
 import "./Workbench.sol";
@@ -84,7 +89,7 @@ contract Craftsman is Ownable {
         Workbench _bench,
         address _devaddr,
         uint256 _startBlock
-    ) {
+    ) public {
         TAN = _TAN;
         bench = _bench;
         devaddr = _devaddr;
