@@ -4,7 +4,7 @@ const TANToken = artifacts.require('TANToken');
 
 contract('TANToken', ([alice, bob, carol, dev, minter]) => {
     beforeEach(async () => {
-        this.TAN = await TANToken.new(10000000000000000000000000, { from: minter });
+        this.TAN = await TANToken.new('10000000000000000000000000', { from: minter });
     });
 
 

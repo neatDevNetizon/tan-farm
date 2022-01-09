@@ -8,7 +8,7 @@ const truffleAssert = require("truffle-assertions");
 
 contract("TANVault", (accounts) => {
   const [owner, treasuryAddress, dev, boredApe, penguin] = accounts;
-  let TANToken;
+  let tanToken;
   let workbench;
   let craftsman;
   let vault;
@@ -19,23 +19,23 @@ contract("TANVault", (accounts) => {
   const TOKEN_BALANCE = 5000;
 
   beforeEach(async () => {
-    TANToken = await TANToken.new(MAX_SUPPLY, { from: owner });
-    workbench = await Workbench.new(TANToken.address, { from: owner });
+    tanToken = await TANToken.new(MAX_SUPPLY, { from: owner });
+    workbench = await Workbench.new(tanToken.address, { from: owner });
     craftsman = await Craftsman.new(
-      TANToken.address,
+      tanToken.address,
       workbench.address,
       dev,
       REWARD_START_BLOCK,
       { from: owner }
     );
-    await TANToken.mint(boredApe, TOKEN_BALANCE, { from: owner });
-    await TANToken.mint(penguin, TOKEN_BALANCE, { from: owner });
+    await tanToken.mint(boredApe, TOKEN_BALANCE, { from: owner });
+    await tanToken.mint(penguin, TOKEN_BALANCE, { from: owner });
 
-    await TANToken.transferOwnership(craftsman.address, { from: owner });
+    await tanToken.transferOwnership(craftsman.address, { from: owner });
     await workbench.transferOwnership(craftsman.address, { from: owner });
 
     vault = await TANVault.new(
-      TANToken.address,
+      tanToken.address,
       workbench.address,
       craftsman.address,
       owner,
@@ -43,8 +43,8 @@ contract("TANVault", (accounts) => {
       { from: owner }
     );
 
-    await TANToken.approve(vault.address, TOKEN_BALANCE, { from: boredApe });
-    await TANToken.approve(vault.address, TOKEN_BALANCE, { from: penguin });
+    await tanToken.approve(vault.address, TOKEN_BALANCE, { from: boredApe });
+    await tanToken.approve(vault.address, TOKEN_BALANCE, { from: penguin });
   });
 
   it("can create contract", async () => {
@@ -54,7 +54,7 @@ contract("TANVault", (accounts) => {
   describe("deposit", () => {
     it("allows to deposit token when contract is not paused", async () => {
       assert.equal(
-        await TANToken.balanceOf(boredApe),
+        await tanToken.balanceOf(boredApe),
         TOKEN_BALANCE,
         `boredApe has ${TOKEN_BALANCE} tokens`
       );
@@ -152,7 +152,7 @@ contract("TANVault", (accounts) => {
       await vault.deposit(500, { from: boredApe });
 
       assert.equal(
-        (await TANToken.balanceOf(boredApe)).toString(),
+        (await tanToken.balanceOf(boredApe)).toString(),
         `${TOKEN_BALANCE - 500}`
       );
     });
@@ -200,7 +200,7 @@ contract("TANVault", (accounts) => {
         );
       });
       assert.equal(
-        (await TANToken.balanceOf(boredApe)).toString(),
+        (await tanToken.balanceOf(boredApe)).toString(),
         `${TOKEN_BALANCE - 500 - 500 + 2066}`,
         `boredApe has ${TOKEN_BALANCE} tokens`
       );
@@ -231,7 +231,7 @@ contract("TANVault", (accounts) => {
       await vault.withdrawAll({ from: boredApe });
 
       assert.equal(
-        Number.parseInt((await TANToken.balanceOf(boredApe)).toString()),
+        Number.parseInt((await tanToken.balanceOf(boredApe)).toString()),
         TOKEN_BALANCE
       );
     });
@@ -274,13 +274,13 @@ contract("TANVault", (accounts) => {
       );
 
       assert.equal(
-        Number.parseInt((await TANToken.balanceOf(treasuryAddress)).toString()),
+        Number.parseInt((await tanToken.balanceOf(treasuryAddress)).toString()),
         Number.parseInt((3000 * 200) / 10000)
       );
 
       // Remaining capital + some call bounty
       assert.equal(
-        Number.parseInt((await TANToken.balanceOf(boredApe)).toString()),
+        Number.parseInt((await tanToken.balanceOf(boredApe)).toString()),
         Number.parseInt(TOKEN_BALANCE - 500 - 1000 + (3000 * 25) / 10000)
       );
 

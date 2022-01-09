@@ -23,7 +23,7 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
 
  describe('add', () => {
   it('only owner can call', async () => {
-   await expectRevert(this.craftsAdmin.add(1000, this.lp1.address, true, { from: alice }), 'Ownable: caller is not the owner\'');
+   await expectRevert(this.craftsAdmin.add(1000, this.lp1.address, true, { from: alice }), 'Ownable: caller is not the owner');
   });
 
   it('can call add', async () => {
@@ -38,7 +38,7 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
   });
 
   it('only owner can call', async () => {
-   await expectRevert(this.craftsAdmin.set(1, 2000, true, { from: alice }), 'Ownable: caller is not the owner\'');
+   await expectRevert(this.craftsAdmin.set(1, 2000, true, { from: alice }), 'Ownable: caller is not the owner');
   });
 
   it('can call set', async () => {
@@ -58,7 +58,7 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
     this.teamAddresses,
     this.teamAmount,
     { from: alice }
-   ), 'Ownable: caller is not the owner\'');
+   ), 'Ownable: caller is not the owner');
   });
 
   it('can call distributeSupply', async () => {
@@ -73,7 +73,7 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
 
  describe('updateStakingRatio', () => {
   it('only owner can call', async () => {
-   await expectRevert(this.craftsAdmin.updateStakingRatio(10, { from: alice }), 'Ownable: caller is not the owner\'');
+   await expectRevert(this.craftsAdmin.updateStakingRatio(10, { from: alice }), 'Ownable: caller is not the owner');
   });
 
   it('can call distributeSupply', async () => {
@@ -84,7 +84,7 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
 
  describe('enableTransferOwnership', () => {
   it('only owner can call', async () => {
-   await expectRevert(this.craftsAdmin.enableTransferOwnership(newOwner, { from: alice }), 'Ownable: caller is not the owner\'');
+   await expectRevert(this.craftsAdmin.enableTransferOwnership(newOwner, { from: alice }), 'Ownable: caller is not the owner');
   });
 
   it('can call enableTransferOwnership', async () => {
@@ -113,7 +113,7 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
 
  describe('transferOwnership', () => {
   it('only owner can call', async () => {
-   await expectRevert(this.craftsAdmin.transferOwnership({ from: alice }), 'Ownable: caller is not the owner\'');
+   await expectRevert(this.craftsAdmin.transferOwnership({ from: alice }), 'Ownable: caller is not the owner');
   });
 
   it('cannot call when timelock timestamp not reached', async () => {

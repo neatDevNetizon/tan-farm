@@ -14,7 +14,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 // import "./lib/token/ERC20/IERC20.sol";
 // import "./lib/utils/math/SafeMath.sol";
 
-interface ICraftsman {
+interface _ICraftsman {
     function deposit(uint256 _pid, uint256 _amount) external;
 
     function withdraw(uint256 _pid, uint256 _amount) external;
@@ -44,7 +44,7 @@ contract TANVault is Ownable, Pausable {
     IERC20 public immutable token; // TAN token
     IERC20 public immutable receiptToken; // Receipt token
 
-    ICraftsman public immutable craftsman;
+    _ICraftsman public immutable craftsman;
 
     mapping(address => UserInfo) public userInfo;
 
@@ -86,7 +86,7 @@ contract TANVault is Ownable, Pausable {
     constructor(
         IERC20 _token,
         IERC20 _receiptToken,
-        ICraftsman _craftsman,
+        _ICraftsman _craftsman,
         address _admin,
         address _treasury
     ) public {
@@ -160,7 +160,7 @@ contract TANVault is Ownable, Pausable {
      * @dev Only possible when contract not paused.
      */
     function harvest() external notContract whenNotPaused {
-        ICraftsman(craftsman).leaveStaking(0);
+        _ICraftsman(craftsman).leaveStaking(0);
 
         uint256 bal = available();
         uint256 currentPerformanceFee = bal.mul(performanceFee).div(10000);
@@ -244,7 +244,7 @@ contract TANVault is Ownable, Pausable {
      * @dev EMERGENCY ONLY. Only callable by the contract admin.
      */
     function emergencyWithdraw() external onlyAdmin {
-        ICraftsman(craftsman).emergencyWithdraw(0);
+        _ICraftsman(craftsman).emergencyWithdraw(0);
     }
 
     /**
@@ -281,7 +281,7 @@ contract TANVault is Ownable, Pausable {
      * @return Expected reward to collect in TAN
      */
     function calculateHarvestTANRewards() external view returns (uint256) {
-        uint256 amount = ICraftsman(craftsman).pendingTAN(0, address(this));
+        uint256 amount = _ICraftsman(craftsman).pendingTAN(0, address(this));
         amount = amount.add(available());
         uint256 currentCallFee = amount.mul(callFee).div(10000);
 
@@ -293,7 +293,7 @@ contract TANVault is Ownable, Pausable {
      * @return Returns total pending TAN rewards
      */
     function calculateTotalPendingTANRewards() external view returns (uint256) {
-        uint256 amount = ICraftsman(craftsman).pendingTAN(0, address(this));
+        uint256 amount = _ICraftsman(craftsman).pendingTAN(0, address(this));
         amount = amount.add(available());
 
         return amount;
@@ -322,7 +322,7 @@ contract TANVault is Ownable, Pausable {
         uint256 bal = available();
         if (bal < currentAmount) {
             uint256 balWithdraw = currentAmount.sub(bal);
-            ICraftsman(craftsman).leaveStaking(balWithdraw);
+            _ICraftsman(craftsman).leaveStaking(balWithdraw);
             uint256 balAfter = available();
             uint256 diff = balAfter.sub(bal);
             if (diff < balWithdraw) {
@@ -362,7 +362,7 @@ contract TANVault is Ownable, Pausable {
      * @dev It includes tokens held by the contract and held in Craftsman
      */
     function balanceOf() public view returns (uint256) {
-        (uint256 amount, ) = ICraftsman(craftsman).userInfo(0, address(this));
+        (uint256 amount, ) = _ICraftsman(craftsman).userInfo(0, address(this));
         return token.balanceOf(address(this)).add(amount);
     }
 
@@ -372,7 +372,7 @@ contract TANVault is Ownable, Pausable {
     function _earn() internal {
         uint256 bal = available();
         if (bal > 0) {
-            ICraftsman(craftsman).enterStaking(bal);
+            _ICraftsman(craftsman).enterStaking(bal);
         }
     }
 

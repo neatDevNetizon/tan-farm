@@ -183,7 +183,7 @@ contract('Craftsman', ([alice, bob, carol, dev, minter]) => {
      });
 
      it('only owner can call', async () => {
-      await expectRevert(this.craft.updateStakingRatio(30, { from: alice }), 'Ownable: caller is not the owner\'');
+      await expectRevert(this.craft.updateStakingRatio(30, { from: alice }), 'Ownable: caller is not the owner');
      });
 
      it('should not accept ratio > 50', async () => {

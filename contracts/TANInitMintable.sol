@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 
 contract TANInitMintable is ERC20("TANToken", "TAN"), Ownable {
   
-    uint256 internal constant DIST_EPOCH = 30 days;
+    uint256 internal constant DIST_EPOCH = 2592000 seconds;
     uint256 internal constant SUPPLY_RATE = 1; // 0.01% of RemainingSupply  
     uint256 internal constant BLOCK_TIME = 6 seconds;  
     
