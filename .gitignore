@@ -8,5 +8,4 @@ cache
 artifacts
 coverage
 coverage.json
-dotenv
 package.lock.json
