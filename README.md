@@ -1,4 +1,4 @@
-# Uranus Farm 💎
+# Tan Farm 💎
 
 ## run tests locally
 
