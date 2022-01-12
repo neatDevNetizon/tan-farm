@@ -11,9 +11,20 @@ function encodeParameters(types, values) {
     return abi.encode(types, values);
 }
 
-contract('Timelock', ([alice, bob, carol, dev, minter]) => {
+contract('Timelock', ([DAO, Growth, LP, Team, alice, bob, carol, dev, minter]) => {
     beforeEach(async () => {
-        this.TAN = await TANToken.new(43200000000, { from: alice });
+
+        // To make our discussion to simple, we suppose "supply per block" is "1000"
+        // So we can calculate at first epoch like:
+        // 
+        //          1000 supply per block 
+        // =   432000000 supply per epoch
+        // = 43200000000 remaining supply ( = supply per epoch * 100)
+        // = 43200000000 farming supply ( = remaining supply + circulating supply(0))
+        // = 65454545455 maximum supply ( = farming supply / 0.66)
+        // 
+        // Therefore, our maximum supply is 65454545455
+        this.TAN = await TANToken.new(65454545455, DAO, Growth, LP, Team, { from: alice });
         this.timelock = await Timelock.new(bob, '28800', { from: alice }); //8hours
     });
 

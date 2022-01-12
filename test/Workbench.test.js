@@ -3,9 +3,9 @@ const { assert } = require('chai');
 const TANToken = artifacts.require('TANToken');
 const Workbench = artifacts.require('Workbench');
 
-contract('Workbench', ([alice, bob, carol, dev, minter]) => {
+contract('Workbench', ([DAO, Growth, LP, Team, alice, bob, carol, dev, minter]) => {
   beforeEach(async () => {
-    this.TAN = await TANToken.new(1000000, { from: minter });
+    this.TAN = await TANToken.new(1000000, DAO, Growth, LP, Team, { from: minter });
     this.bench = await Workbench.new(this.TAN.address, { from: minter });
   });
 

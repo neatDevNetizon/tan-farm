@@ -7,19 +7,28 @@ const Craftsman = artifacts.require("Craftsman");
 const truffleAssert = require("truffle-assertions");
 
 contract("TANVault", (accounts) => {
-  const [owner, treasuryAddress, dev, boredApe, penguin] = accounts;
+  const [DAO, Growth, LP, Team, owner, treasuryAddress, dev, boredApe, penguin] = accounts;
   let tanToken;
   let workbench;
   let craftsman;
   let vault;
+  // To make our discussion to simple, we suppose "supply per block" is "1000"
+  // So we can calculate at first epoch like:
+  // 
+  //          1000 supply per block 
+  // =   432000000 supply per epoch
+  // = 43200000000 remaining supply ( = supply per epoch * 100)
+  // = 43200000000 farming supply ( = remaining supply + circulating supply(0))
+  // = 65454545455 maximum supply ( = farming supply / 0.66)
+  // 
+  // Therefore, our maximum supply is 65454545455
   let REWARD_PER_BLOCK = 1000;
-  //XXX 1000 per block = 432000000 per epoch in first epoch = 43200000000 (max supply - team supply(=0) = community supply) 
-  let MAX_SUPPLY = 43200000000;
+  let MAX_SUPPLY = 65454545455;
   let REWARD_START_BLOCK = 1; // Rewards always starts at each test
   const TOKEN_BALANCE = 5000;
 
   beforeEach(async () => {
-    tanToken = await TANToken.new(MAX_SUPPLY, { from: owner });
+    tanToken = await TANToken.new(MAX_SUPPLY, DAO, Growth, LP, Team, { from: owner });
     workbench = await Workbench.new(tanToken.address, { from: owner });
     craftsman = await Craftsman.new(
       tanToken.address,

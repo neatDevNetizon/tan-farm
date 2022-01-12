@@ -328,12 +328,9 @@ contract Craftsman is Ownable {
         devaddr = _devaddr;
     }
 
-    function distributeSupply(
-        address[] memory _teamAddresses,
-        uint256[] memory _teamAmounts
-    ) public onlyOwner {
+    function updateSupply() public onlyOwner {
         massUpdatePools();
-        TAN.distributeSupply(_teamAddresses, _teamAmounts);
+        TAN.updateSupply();
         TANPerBlock = TAN.SupplyPerBlock();
     }
 

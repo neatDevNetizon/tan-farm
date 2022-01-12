@@ -13,7 +13,7 @@ import "./Craftsman.sol";
 interface ICraftsman {
     function add(uint256 _allocPoint, IERC20 _lpToken, bool _withUpdate) external;
     function set(uint256 _pid, uint256 _allocPoint, bool _withUpdate) external;
-    function distributeSupply(address[] memory _teamAddresses, uint256[] memory _teamAmounts) external;
+    function updateSupply() external;
     function updateStakingRatio(uint256 _ratio) external;
 
     // Ownable
@@ -51,11 +51,8 @@ contract CraftsmanAdmin is Ownable {
         craftsman.set(_pid, _allocPoint, _withUpdate);
     }
 
-    function distributeSupply(
-        address[] memory _teamAddresses,
-        uint256[] memory _teamAmounts
-    ) public onlyOwner {
-        craftsman.distributeSupply(_teamAddresses, _teamAmounts);
+    function updateSupply() public onlyOwner {
+        craftsman.updateSupply();
     }
 
     function updateStakingRatio(

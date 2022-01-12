@@ -6,10 +6,19 @@ const Craftsman = artifacts.require('Craftsman');
 const CraftsmanAdmin = artifacts.require('CraftsmanAdmin');
 const MockERC20 = artifacts.require('MockERC20');
 
-contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
+contract('CraftsmanAdmin', ([DAO, Growth, LP, Team, alice, newOwner, newOwner1, dev, minter]) => {
  beforeEach(async () => {
-  // 1000 per block = 432000000 per epoch in first epoch = 43200000000 (max supply - team supply(=0) = community supply) 
-  this.TAN = await TANToken.new(43200000000, { from: minter });
+  // To make our discussion to simple, we suppose "supply per block" is "1000"
+  // So we can calculate at first epoch like:
+  // 
+  //          1000 supply per block 
+  // =   432000000 supply per epoch
+  // = 43200000000 remaining supply ( = supply per epoch * 100)
+  // = 43200000000 farming supply ( = remaining supply + circulating supply(0))
+  // = 65454545455 maximum supply ( = farming supply / 0.66)
+  // 
+  // Therefore, our maximum supply is 65454545455
+  this.TAN = await TANToken.new(65454545455, DAO, Growth, LP, Team, { from: minter });
   this.bench = await Workbench.new(this.TAN.address, { from: minter });
   this.craft = await Craftsman.new(this.TAN.address, this.bench.address, dev, '100', { from: minter });
   this.craftsAdmin = await CraftsmanAdmin.new(this.craft.address, { from: minter });
@@ -48,26 +57,15 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
   });
  });
 
- describe('distributeSupply', () => {
-  beforeEach(() => {
-   this.teamAddresses = [alice];
-   this.teamAmount = [1000];
-  });
+ describe('updateSupply', () => {
+  beforeEach(() => {});
   it('only owner can call', async () => {
-   await expectRevert(this.craftsAdmin.distributeSupply(
-    this.teamAddresses,
-    this.teamAmount,
-    { from: alice }
-   ), 'Ownable: caller is not the owner');
+   await expectRevert(this.craftsAdmin.updateSupply({ from: alice }), 'Ownable: caller is not the owner');
   });
 
-  it('can call distributeSupply', async () => {
-   await this.craftsAdmin.distributeSupply(
-    this.teamAddresses,
-    this.teamAmount,
-    { from: minter }
-   );
-   assert.equal(await this.TAN.balanceOf(alice), 1000);
+  it('can call updateSupply', async () => {
+   await this.craftsAdmin.updateSupply({ from: minter });
+   assert.equal(await this.TAN.SupplyPerBlock(), 1000);
   });
  });
 
@@ -76,7 +74,7 @@ contract('CraftsmanAdmin', ([alice, newOwner, newOwner1, dev, minter]) => {
    await expectRevert(this.craftsAdmin.updateStakingRatio(10, { from: alice }), 'Ownable: caller is not the owner');
   });
 
-  it('can call distributeSupply', async () => {
+  it('can call updateSupply', async () => {
    await this.craftsAdmin.updateStakingRatio(10, { from: minter });
    assert.equal(await this.craft.TANStakingRatio(), 10);
   });

@@ -4,10 +4,20 @@ const Workbench = artifacts.require('Workbench');
 const Craftsman = artifacts.require('Craftsman');
 const MockERC20 = artifacts.require('libs/MockERC20');
 
-contract('Craftsman', ([alice, bob, carol, dev, minter]) => {
+contract('Craftsman', ([DAO, Growth, LP, Team, alice, bob, carol, dev, minter]) => {
     beforeEach(async () => {
-        // 1000 per block = 432000000 per epoch in first epoch = 43200000000 (max supply - team supply(=0) = community supply) 
-        this.TAN = await TANToken.new(43200000000, { from: minter });
+        // To make our discussion to simple, we suppose "supply per block" is "1000"
+        // So we can calculate at first epoch like:
+        // 
+        //          1000 supply per block 
+        // =   432000000 supply per epoch
+        // = 43200000000 remaining supply ( = supply per epoch * 100)
+        // = 43200000000 farming supply ( = remaining supply + circulating supply(0))
+        // = 65454545455 maximum supply ( = farming supply / 0.66)
+        // 
+        // Therefore, our maximum supply is 65454545455
+
+        this.TAN = await TANToken.new(65454545455, DAO, Growth, LP, Team, { from: minter });
         this.bench = await Workbench.new(this.TAN.address, { from: minter });
         this.lp1 = await MockERC20.new('LPToken', 'LP1', '1000000', { from: minter });
         this.lp2 = await MockERC20.new('LPToken', 'LP2', '1000000', { from: minter });
@@ -101,7 +111,7 @@ contract('Craftsman', ([alice, bob, carol, dev, minter]) => {
       await this.craft.enterStaking('10', { from: alice }); //4
       assert.equal((await this.bench.balanceOf(alice)).toString(), '250');
       assert.equal((await this.TAN.balanceOf(alice)).toString(), '249');
-      await this.craft.leaveStaking(250);
+      await this.craft.leaveStaking('250', { from: alice });
       assert.equal((await this.bench.balanceOf(alice)).toString(), '0');
       assert.equal((await this.TAN.balanceOf(alice)).toString(), '749');
 
@@ -160,10 +170,9 @@ contract('Craftsman', ([alice, bob, carol, dev, minter]) => {
       assert.equal((await this.craft.devaddr()).valueOf(), alice);
     })
 
-    it('distributeSupply', async () => {
-     // Half of 432000000 per epoch = 500 per block
-     await this.craft.distributeSupply([alice], [216000000], { from: minter });
-     assert.equal((await this.craft.TANPerBlock()).valueOf(), 500);
+    it('updateSupply', async () => {
+     await this.craft.updateSupply({ from: minter });
+     assert.equal((await this.craft.TANPerBlock()).valueOf(), 1000);
     });
 
     describe('updateStakingRatio', () => {
