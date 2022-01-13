@@ -1,21 +1,14 @@
-
 // SPDX-License-Identifier: GEO
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import '@openzeppelin/contracts/math/SafeMath.sol';
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/SafeERC20.sol';
-import '@openzeppelin/contracts/access/Ownable.sol';
-
+import "./libs/ReentrancyGuard.sol";
+import './libs/SafeMath.sol';
+import './libs/IERC20.sol';
+import './libs/SafeERC20.sol';
+import './libs/Ownable.sol';
 import "./IIGO.sol";
 
-// import "./lib/security/ReentrancyGuard.sol";
-// import './lib/utils/math/SafeMath.sol';
-// import './lib/token/ERC20/IERC20.sol';
-// import './lib/token/ERC20/utils/SafeERC20.sol';
-// import './lib/access/Ownable.sol';
 
 contract IGO is IIGO, ReentrancyGuard, Ownable {
     using SafeMath for uint256;

@@ -2,13 +2,9 @@
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-
+import "./libs/ERC20.sol";
+import "./libs/Ownable.sol";
 import "./TANToken.sol";
-
-// import "./lib/token/ERC20/ERC20.sol";
-// import "./lib/access/Ownable.sol";
 
 
 // Workbench with Governance.

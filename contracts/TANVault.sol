@@ -2,17 +2,12 @@
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Pausable.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "./libs/Ownable.sol";
+import "./libs/Pausable.sol";
+import "./libs/SafeERC20.sol";
+import "./libs/IERC20.sol";
+import "./libs/SafeMath.sol";
 
-// import "./lib/access/Ownable.sol";
-// import "./lib/security/Pausable.sol";
-// import "./lib/token/ERC20/utils/SafeERC20.sol";
-// import "./lib/token/ERC20/IERC20.sol";
-// import "./lib/utils/math/SafeMath.sol";
 
 interface _ICraftsman {
     function deposit(uint256 _pid, uint256 _amount) external;

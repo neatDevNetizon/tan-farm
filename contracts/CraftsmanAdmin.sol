@@ -2,13 +2,10 @@
 
 pragma solidity 0.6.12;
 
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/access/Ownable.sol';
+import './libs/IERC20.sol';
+import './libs/Ownable.sol';
 import "./Craftsman.sol";
 
-// import './lib/token/ERC20/IERC20.sol';
-// import './lib/access/Ownable.sol';
-// import "./Craftsman.sol";
 
 interface ICraftsman {
     function add(uint256 _allocPoint, IERC20 _lpToken, bool _withUpdate) external;

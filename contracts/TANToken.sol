@@ -2,9 +2,9 @@
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "./libs/Ownable.sol";
+import "./libs/ERC20.sol";
+import "./libs/SafeMath.sol";
 
 
 contract TANToken is ERC20("TANToken", "TAN"), Ownable {
